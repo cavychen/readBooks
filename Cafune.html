@@ -1,0 +1,229 @@
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【卡芙涅】讀書會活動：家事撫慰的瞬間</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #fdfaf7;
+            color: #4a3f35;
+        }
+        
+        .serif {
+            font-family: 'Noto Serif TC', serif;
+        }
+
+        .bg-kafe-paper {
+            background-image: url('https://www.transparenttextures.com/patterns/felt.png');
+            background-color: #fdfaf7;
+        }
+
+        .quote-card {
+            border-left: 4px solid #c4a484;
+            background-color: rgba(196, 164, 132, 0.1);
+        }
+
+        .drop-shadow-soft {
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
+        }
+        
+        #photo-preview {
+            max-height: 400px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-kafe-paper min-h-screen">
+
+    <!-- Header Section -->
+    <header class="max-w-4xl mx-auto pt-16 pb-12 px-6 text-center">
+        <h1 class="serif text-4xl md:text-5xl font-bold mb-4 tracking-wider text-stone-800">卡芙涅：家事撫慰的瞬間</h1>
+        <div class="h-1 w-24 bg-stone-400 mx-auto mb-8"></div>
+        <p class="text-lg text-stone-600 leading-relaxed max-w-2xl mx-auto">
+            在瑣碎的勞動中，我們重新整理了生活的秩序，<br>
+            也溫柔地安放了自己的靈魂。
+        </p>
+    </header>
+
+    <!-- Introduction & Quotes -->
+    <section class="max-w-3xl mx-auto px-6 mb-16">
+        <div class="quote-card p-8 rounded-r-lg mb-12">
+            <h2 class="serif text-xl font-bold mb-4 italic">《卡芙涅》書中私語：</h2>
+            <blockquote class="text-lg leading-loose text-stone-700">
+                「家事並非勞役，而是一種創造。當我們把碗盤洗淨、將褶皺抹平，我們在那一刻，其實是把破碎的世界重新拼湊完整。那種滿足感，是來自於與『當下』最深刻的連結。」
+            </blockquote>
+        </div>
+
+        <div class="text-center mb-12">
+            <h3 class="serif text-2xl font-bold mb-6">活動引言：分享你的「居家光芒」</h3>
+            <p class="text-stone-600 mb-8 text-left leading-loose">
+                親愛的讀者，讀完《卡芙涅》後，你是否也開始在日常的繁瑣中，感受到一種安靜的力量？
+                <br><br>
+                是一頓細心烹調後的晚餐香氣？是洗淨晾乾後帶著陽光味道的床單？還是把雜亂角落整理乾淨後的清爽？
+                <br><br>
+                我們邀請你，上傳一張此刻令你心裡感到滿足的「家事時刻」照片，並留下一句話，讓我們一起看見日常之美。
+            </p>
+        </div>
+    </section>
+
+    <!-- Upload Form Section -->
+    <section class="max-w-2xl mx-auto px-6 mb-24">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-100">
+            <h4 class="serif text-xl font-bold mb-6 text-center">開始你的居家記錄</h4>
+            
+            <div class="space-y-6">
+                <!-- Photo Upload Area -->
+                <div class="relative">
+                    <label for="photo-input" class="cursor-pointer group">
+                        <div id="upload-placeholder" class="border-2 border-dashed border-stone-200 rounded-xl py-12 px-4 text-center transition-all group-hover:border-stone-400 group-hover:bg-stone-50">
+                            <i class="fa-solid fa-camera text-4xl text-stone-300 mb-4"></i>
+                            <p class="text-stone-500 font-medium">點擊或拖拽照片至此</p>
+                            <p class="text-stone-400 text-sm mt-1">（煮好的菜、乾淨的客廳、摺好的衣服...）</p>
+                        </div>
+                        <img id="photo-preview" class="hidden w-full rounded-xl shadow-md mx-auto" src="" alt="預覽照片">
+                    </label>
+                    <input type="file" id="photo-input" class="hidden" accept="image/*">
+                    <button id="reset-photo" class="hidden absolute top-4 right-4 bg-white/80 backdrop-blur p-2 rounded-full shadow hover:bg-white text-stone-600">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Reflection Content -->
+                <div>
+                    <label class="block text-sm font-medium text-stone-700 mb-2">那一刻的心情</label>
+                    <textarea id="reflection" rows="3" class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-stone-200 focus:border-stone-400 outline-none transition-all resize-none" placeholder="寫下一句讓你想起《卡芙涅》的話..."></textarea>
+                </div>
+
+                <!-- Name (Optional) -->
+                <div>
+                    <label class="block text-sm font-medium text-stone-700 mb-2">你的暱稱</label>
+                    <input type="text" id="username" class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-stone-200 focus:border-stone-400 outline-none transition-all" placeholder="例如：尋找安靜的廚師">
+                </div>
+
+                <button onclick="handleSubmit()" class="w-full bg-stone-800 text-white py-4 rounded-xl font-bold tracking-widest hover:bg-stone-700 transition-colors shadow-lg active:scale-95">
+                    發布至「居家撫慰牆」
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wall of Comfort (Display Area) -->
+    <section class="max-w-6xl mx-auto px-6 pb-24">
+        <h3 class="serif text-3xl font-bold text-center mb-12">居家撫慰牆</h3>
+        <div id="comfort-wall" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Initial Mock Item -->
+            <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-50">
+                <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=800" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <p class="text-stone-700 mb-4 leading-relaxed italic">「看著窗外灑進廚房的陽光，把碗盤擦乾整齊收好。我終於明白書裡說的，家事是為了整理靈魂。」</p>
+                    <div class="flex justify-between items-center text-sm text-stone-400">
+                        <span>— 愛讀書的小明</span>
+                        <span>2024.03.20</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-12 text-stone-400 text-sm border-t border-stone-100">
+        <p>《卡芙涅》讀書會 專屬互動頁面</p>
+    </footer>
+
+    <!-- Success Message Overlay -->
+    <div id="success-toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-stone-800 text-white px-8 py-4 rounded-full shadow-2xl transition-all opacity-0 translate-y-10 pointer-events-none z-50">
+        已成功發布！感謝你的溫暖分享。
+    </div>
+
+    <script>
+        const photoInput = document.getElementById('photo-input');
+        const photoPreview = document.getElementById('photo-preview');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const resetPhotoBtn = document.getElementById('reset-photo');
+        const comfortWall = document.getElementById('comfort-wall');
+
+        // Handle Photo Preview
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    photoPreview.src = event.target.result;
+                    photoPreview.classList.remove('hidden');
+                    uploadPlaceholder.classList.add('hidden');
+                    resetPhotoBtn.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Reset Photo
+        resetPhotoBtn.addEventListener('click', () => {
+            photoInput.value = '';
+            photoPreview.src = '';
+            photoPreview.classList.add('hidden');
+            uploadPlaceholder.classList.remove('hidden');
+            resetPhotoBtn.classList.add('hidden');
+        });
+
+        // Submit Logic (Simulated)
+        function handleSubmit() {
+            const reflection = document.getElementById('reflection').value;
+            const username = document.getElementById('username').value || "匿名讀者";
+            const photoSrc = photoPreview.src;
+
+            if (!photoSrc || !reflection) {
+                alert("請上傳一張照片並分享你的心情喔！");
+                return;
+            }
+
+            // Create New Card
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-50 animate-fadeIn";
+            card.innerHTML = `
+                <img src="${photoSrc}" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <p class="text-stone-700 mb-4 leading-relaxed italic">「${reflection}」</p>
+                    <div class="flex justify-between items-center text-sm text-stone-400">
+                        <span>— ${username}</span>
+                        <span>剛剛</span>
+                    </div>
+                </div>
+            `;
+
+            // Prepend to Wall
+            comfortWall.prepend(card);
+
+            // Show Toast
+            const toast = document.getElementById('success-toast');
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, 0)';
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 10px)';
+            }, 3000);
+
+            // Clear Form
+            document.getElementById('reflection').value = '';
+            document.getElementById('username').value = '';
+            resetPhotoBtn.click();
+        }
+    </script>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+</body>
+</html>
