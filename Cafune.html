@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -12,485 +11,565 @@
         
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            /* 暖陽奶油白底色搭配精緻內嵌 SVG 暖金布織紋，呈現溫暖乾淨的手工編織感 */
             background-color: #fffdf9;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M0 0h16v1H0zm0 4h16v1H0zm0 8h16v1H0zm0 4h16v1H0zM0 0h1v16H0zm4 0h1v16H4zm8 0h1v16h-1zm4 0h1v16h-1z' fill='%23d9cbb6' fill-opacity='0.22'/%3E%3C/svg%3E");
             color: #4a3e3d;
         }
-        
-        .serif {
-            font-family: 'Noto Serif TC', serif;
-        }
+        .serif { font-family: 'Noto Serif TC', serif; }
 
-        /* 溫暖編織感卡片邊條 */
         .quote-card {
-            border-left: 4px solid #d99b59; /* 暖焦糖橘 */
+            border-left: 4px solid #d99b59;
             background-color: rgba(253, 250, 242, 0.85);
             backdrop-filter: blur(2px);
         }
-        
-        #photo-preview {
-            max-height: 400px;
-            object-fit: contain;
-        }
-        
-        /* 旋轉載入動畫 */
+
+        #photo-preview { max-height: 400px; object-fit: contain; }
+
         .loader {
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255,255,255,0.3);
             border-top: 3px solid #ffffff;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            width: 20px; height: 20px;
             animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 8px;
+            display: inline-block; vertical-align: middle; margin-right: 8px;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 
-        /* 拍立得照片卡片樣式 */
         .polaroid-card {
             background-color: #faf9f5;
-            box-shadow: 0 8px 16px rgba(139, 92, 26, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02);
-            border: 1px solid rgba(217, 203, 182, 0.4);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 8px 16px rgba(139,92,26,0.08), 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid rgba(217,203,182,0.4);
+            transition: all 0.4s cubic-bezier(0.165,0.84,0.44,1);
         }
         .polaroid-card:hover {
             transform: rotate(0deg) scale(1.05) translateY(-8px) !important;
-            box-shadow: 0 20px 30px rgba(139, 92, 26, 0.15), 0 4px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 30px rgba(139,92,26,0.15), 0 4px 8px rgba(0,0,0,0.04);
             z-index: 20;
         }
 
-        /* 動態新增拍立得的動畫 */
         @keyframes pinPhoto {
-            0% {
-                opacity: 0;
-                transform: scale(0.7) translateY(-50px) rotate(-10deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0) rotate(var(--rand-rot, -1deg));
-            }
+            0%  { opacity:0; transform:scale(0.7) translateY(-50px) rotate(-10deg); }
+            100%{ opacity:1; transform:scale(1) translateY(0) rotate(var(--rand-rot,-1deg)); }
         }
-        .animate-pin {
-            animation: pinPhoto 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        .animate-pin { animation: pinPhoto 0.8s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
+
+        /* 上傳拖曳區 hover 狀態 */
+        .upload-zone.drag-over { border-color: #d97706; background-color: rgba(251,191,36,0.08); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- 主內容區 -->
-    <main class="flex-grow">
-        <!-- 頂部橫幅 -->
-        <header class="max-w-4xl mx-auto pt-20 pb-12 px-6 text-center">
-            <span class="text-amber-700 font-bold tracking-widest text-sm uppercase block mb-3">Cafuné Book Club</span>
-            <h1 class="serif text-4xl md:text-5xl font-bold mb-4 tracking-wider text-amber-950">卡芙涅：家事撫慰的瞬間</h1>
-            <div class="h-1 w-20 bg-amber-500/60 mx-auto mb-8 rounded-full"></div>
-            <p class="text-lg text-stone-600 leading-relaxed max-w-2xl mx-auto">
-                在瑣碎的日常勞動中，我們重新整理了生活的秩序，<br>
-                也溫柔地安放了自己的靈魂。
+<main class="flex-grow">
+
+    <!-- 頂部橫幅 -->
+    <header class="max-w-4xl mx-auto pt-20 pb-12 px-6 text-center">
+        <span class="text-amber-700 font-bold tracking-widest text-sm uppercase block mb-3">Cafuné Book Club</span>
+        <h1 class="serif text-4xl md:text-5xl font-bold mb-4 tracking-wider text-amber-950">卡芙涅：家事撫慰的瞬間</h1>
+        <div class="h-1 w-20 bg-amber-500/60 mx-auto mb-8 rounded-full"></div>
+        <p class="text-lg text-stone-600 leading-relaxed max-w-2xl mx-auto">
+            在瑣碎的日常勞動中，我們重新整理了生活的秩序，<br>
+            也溫柔地安放了自己的靈魂。
+        </p>
+    </header>
+
+    <!-- 書中佳句 -->
+    <section class="max-w-3xl mx-auto px-6 mb-12">
+        <div class="quote-card p-8 rounded-r-2xl mb-12 shadow-sm border border-stone-200/20">
+            <h2 class="serif text-xl font-bold mb-4 italic text-amber-800">
+                <i class="fa-solid fa-quote-left mr-2 opacity-50"></i>《卡芙涅》書中私語：
+            </h2>
+            <blockquote class="text-lg leading-loose text-stone-700 pl-4">
+                「家事並非勞役，而是一種創造。當我們把碗盤洗淨、將褶皺抹平，我們在那一刻，其實是把破碎的世界重新拼湊完整。那種滿足感，是來自於與『當下』最深刻的連結。」
+            </blockquote>
+        </div>
+
+        <div class="text-center mb-12">
+            <h3 class="serif text-2xl font-bold mb-6 text-amber-900">活動引言：分享你的「居家光芒」</h3>
+            <p class="text-stone-600 mb-8 text-left leading-loose text-base md:text-lg">
+                親愛的讀者，讀完《卡芙涅》後，你是否也開始在日常的繁瑣中，感受到一種安靜的力量？
+                <br><br>
+                是一頓細心烹調後的晚餐香氣？是洗淨晾乾後帶著陽光味道的床單？還是把雜亂角落整理乾淨後的清爽？
+                <br><br>
+                我們邀請你，上傳一張此刻令你心裡感到滿足的「家事時刻」照片，並留下一句話。上傳的照片將被釘在下方的「拍立得撫慰牆」上，讓我們一起看見日常之美。
             </p>
-        </header>
+        </div>
+    </section>
 
-        <!-- 活動引言與內文佳句 -->
-        <section class="max-w-3xl mx-auto px-6 mb-12">
-            <div class="quote-card p-8 rounded-r-2xl mb-12 shadow-sm border border-stone-200/20">
-                <h2 class="serif text-xl font-bold mb-4 italic text-amber-800">
-                    <i class="fa-solid fa-quote-left mr-2 opacity-50"></i>《卡芙涅》書中私語：
-                </h2>
-                <blockquote class="text-lg leading-loose text-stone-700 pl-4">
-                    「家事並非勞役，而是一種創造。當我們把碗盤洗淨、將褶皺抹平，我們在那一刻，其實是把破碎的世界重新拼湊完整。那種滿足感，是來自於與『當下』最深刻的連結。」
-                </blockquote>
-            </div>
+    <!-- 上傳表單 -->
+    <section class="max-w-2xl mx-auto px-6 mb-24">
+        <div class="bg-white/95 backdrop-blur-sm p-8 md:p-10 rounded-3xl shadow-lg shadow-amber-900/5 border border-amber-100/40">
+            <h4 class="serif text-xl font-bold mb-6 text-center text-amber-900">
+                <i class="fa-regular fa-sun text-amber-500 mr-2"></i>開始你的居家記錄
+            </h4>
 
-            <div class="text-center mb-12">
-                <h3 class="serif text-2xl font-bold mb-6 text-amber-900">活動引言：分享你的「居家光芒」</h3>
-                <p class="text-stone-600 mb-8 text-left leading-loose text-base md:text-lg">
-                    親愛的讀者，讀完《卡芙涅》後，你是否也開始在日常的繁瑣中，感受到一種安靜的力量？
-                    <br><br>
-                    是一頓細心烹調後的晚餐香氣？是洗淨晾乾後帶著陽光味道的床單？還是把雜亂角落整理乾淨後的清爽？
-                    <br><br>
-                    我們邀請你，上傳一張此刻令你心裡感到滿足的「家事時刻」照片，並留下一句話。上傳的照片將會安全地儲存於讀書會的雲端紀錄中，同時也會被釘在下方的「拍立得撫慰牆」上，讓我們一起看見日常之美。
-                </p>
-            </div>
-        </section>
-
-        <!-- 上傳表單 -->
-        <section class="max-w-2xl mx-auto px-6 mb-24">
-            <div class="bg-white/95 backdrop-blur-sm p-8 md:p-10 rounded-3xl shadow-lg shadow-amber-900/5 border border-amber-100/40">
-                <h4 class="serif text-xl font-bold mb-6 text-center text-amber-900">
-                    <i class="fa-regular fa-sun text-amber-500 mr-2"></i>開始你的居家記錄
-                </h4>
-                
-                <div class="space-y-6">
-                    <!-- 照片選擇區 -->
-                    <div class="relative">
-                        <label for="photo-input" class="cursor-pointer group block">
-                            <div id="upload-placeholder" class="border-2 border-dashed border-amber-200 bg-amber-50/10 rounded-2xl py-14 px-4 text-center transition-all group-hover:border-amber-400 group-hover:bg-amber-50/30">
-                                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-105 transition-transform">
-                                    <i class="fa-solid fa-camera text-2xl text-amber-500"></i>
-                                </div>
-                                <p class="text-amber-900 font-semibold text-lg">點擊或拖曳照片至此</p>
-                                <p class="text-stone-400 text-sm mt-2">（煮好的菜、乾淨的客廳、摺好的衣服...）</p>
+            <div class="space-y-6">
+                <!-- 照片選擇區（支援拖曳、桌機/手機相機） -->
+                <div class="relative">
+                    <label for="photo-input" class="cursor-pointer group block">
+                        <div id="upload-placeholder" class="upload-zone border-2 border-dashed border-amber-200 bg-amber-50/10 rounded-2xl py-14 px-4 text-center transition-all group-hover:border-amber-400 group-hover:bg-amber-50/30">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-camera text-2xl text-amber-500"></i>
                             </div>
-                            <img id="photo-preview" class="hidden w-full rounded-2xl shadow-md mx-auto border-4 border-white" src="" alt="預覽照片">
-                        </label>
-                        <input type="file" id="photo-input" class="hidden" accept="image/*">
-                        <button id="reset-photo" class="hidden absolute top-4 right-4 bg-white/90 backdrop-blur p-2.5 rounded-full shadow-md hover:bg-white text-stone-600 transition-colors">
-                            <i class="fa-solid fa-xmark text-lg"></i>
-                        </button>
-                    </div>
-
-                    <!-- 心情札記 -->
-                    <div>
-                        <label class="block text-sm font-bold text-amber-900 mb-2">
-                            <i class="fa-regular fa-pen-to-square mr-1"></i> 那一刻的心情
-                        </label>
-                        <textarea id="reflection" rows="3" class="w-full px-4 py-3 rounded-2xl border border-amber-100 bg-stone-50/50 focus:ring-2 focus:ring-amber-200 focus:border-amber-400 outline-none transition-all resize-none placeholder-stone-400 text-stone-700" placeholder="寫下一句讓你想起《卡芙涅》的話..."></textarea>
-                    </div>
-
-                    <!-- 暱稱 -->
-                    <div>
-                        <label class="block text-sm font-bold text-amber-900 mb-2">
-                            <i class="fa-regular fa-user mr-1"></i> 你的暱稱
-                        </label>
-                        <input type="text" id="username" class="w-full px-4 py-3 rounded-2xl border border-amber-100 bg-stone-50/50 focus:ring-2 focus:ring-amber-200 focus:border-amber-400 outline-none transition-all placeholder-stone-400 text-stone-700" placeholder="例如：尋找安靜的廚師">
-                    </div>
-
-                    <button id="submit-btn" onclick="handleSubmit()" class="w-full bg-amber-700 hover:bg-amber-800 text-white py-4 rounded-2xl font-bold tracking-widest shadow-lg shadow-amber-800/25 active:scale-[0.98] transition-all">
-                        <span id="btn-text">上傳至讀書會雲端硬碟</span>
+                            <p class="text-amber-900 font-semibold text-lg">點擊選擇或拍照</p>
+                            <p class="text-stone-400 text-sm mt-2">（支援拖曳・JPG / PNG・5MB 以內）</p>
+                        </div>
+                        <img id="photo-preview" class="hidden w-full rounded-2xl shadow-md mx-auto border-4 border-white" src="" alt="預覽照片">
+                    </label>
+                    <!--
+                        ✅ 修正1：加入 capture="environment" 讓行動裝置可直接開啟相機鏡頭
+                        ✅ 修正2：accept 明確列出常見格式，提升跨裝置相容性
+                    -->
+                    <input type="file" id="photo-input" class="hidden"
+                           accept="image/jpeg,image/png,image/webp,image/gif,image/*"
+                           capture="environment">
+                    <button id="reset-photo" class="hidden absolute top-4 right-4 bg-white/90 backdrop-blur p-2.5 rounded-full shadow-md hover:bg-white text-stone-600 transition-colors" type="button">
+                        <i class="fa-solid fa-xmark text-lg"></i>
                     </button>
                 </div>
-            </div>
-        </section>
 
-        <!-- 拍立得照片展示牆區 -->
-        <section id="wall-section" class="max-w-6xl mx-auto px-6 pb-32">
-            <div class="text-center mb-16">
-                <h3 class="serif text-3xl font-bold text-amber-950 mb-3">居家撫慰拍立得牆</h3>
-                <p class="text-stone-500 text-sm">每個平凡的瞬間，都被溫柔地洗了出來，安靜地貼在這裡</p>
-                <div class="h-0.5 w-12 bg-amber-200 mx-auto mt-4"></div>
-            </div>
-
-            <!-- 拍立得格線佈局 -->
-            <div id="polaroid-wall" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-8">
-                
-                <!-- 預設載入中的骨架屏（Shimmer Placeholder） -->
-                <div id="wall-loading" class="col-span-full py-12 text-center text-stone-400">
-                    <span class="inline-block animate-bounce text-amber-600 text-2xl mb-4"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
-                    <p class="serif italic text-base">正在從讀書會雲端晾乾相片中，請稍候...</p>
+                <!-- 心情札記 -->
+                <div>
+                    <label class="block text-sm font-bold text-amber-900 mb-2">
+                        <i class="fa-regular fa-pen-to-square mr-1"></i> 那一刻的心情
+                    </label>
+                    <textarea id="reflection" rows="3"
+                        class="w-full px-4 py-3 rounded-2xl border border-amber-100 bg-stone-50/50 focus:ring-2 focus:ring-amber-200 focus:border-amber-400 outline-none transition-all resize-none placeholder-stone-400 text-stone-700"
+                        placeholder="寫下一句讓你想起《卡芙涅》的話..."
+                        maxlength="200"></textarea>
+                    <p class="text-right text-xs text-stone-400 mt-1"><span id="char-count">0</span> / 200</p>
                 </div>
 
-            </div>
-        </section>
-    </main>
+                <!-- 暱稱 -->
+                <div>
+                    <label class="block text-sm font-bold text-amber-900 mb-2">
+                        <i class="fa-regular fa-user mr-1"></i> 你的暱稱
+                    </label>
+                    <input type="text" id="username" maxlength="30"
+                        class="w-full px-4 py-3 rounded-2xl border border-amber-100 bg-stone-50/50 focus:ring-2 focus:ring-amber-200 focus:border-amber-400 outline-none transition-all placeholder-stone-400 text-stone-700"
+                        placeholder="例如：尋找安靜的廚師">
+                </div>
 
-    <!-- 頁尾 -->
-    <footer class="text-center py-8 text-stone-400 text-sm border-t border-amber-100/30 bg-white/60 backdrop-blur-sm w-full">
-        <p>《卡芙涅》讀書會 專屬互動頁面</p>
-    </footer>
+                <button id="submit-btn" type="button" onclick="handleSubmit()"
+                    class="w-full bg-amber-700 hover:bg-amber-800 text-white py-4 rounded-2xl font-bold tracking-widest shadow-lg shadow-amber-800/25 active:scale-[0.98] transition-all">
+                    <span id="btn-text">上傳至讀書會雲端硬碟</span>
+                </button>
 
-    <!-- 自訂提示視窗 (Custom Modal) -->
-    <div id="custom-modal" class="fixed inset-0 bg-stone-900/30 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-xl transform scale-95 transition-transform duration-300 text-center border border-amber-50">
-            <div id="modal-icon" class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <!-- 圖示由 JS 動態替換 -->
+                <!-- 連線狀態指示燈 -->
+                <p id="api-status" class="text-center text-xs text-stone-400 hidden">
+                    <i class="fa-solid fa-circle text-emerald-400 text-[8px] mr-1"></i>讀書會雲端連線正常
+                </p>
             </div>
-            <h3 id="modal-title" class="serif text-xl font-bold text-stone-800 mb-2"></h3>
-            <p id="modal-message" class="text-stone-600 mb-6 leading-relaxed text-sm"></p>
-            <button onclick="closeModal()" class="w-full bg-amber-700 text-white py-3 rounded-xl font-medium hover:bg-amber-800 transition-colors shadow-md">
-                我知道了
-            </button>
         </div>
+    </section>
+
+    <!-- 拍立得牆 -->
+    <section id="wall-section" class="max-w-6xl mx-auto px-6 pb-32">
+        <div class="text-center mb-16">
+            <h3 class="serif text-3xl font-bold text-amber-950 mb-3">居家撫慰拍立得牆</h3>
+            <p class="text-stone-500 text-sm">每個平凡的瞬間，都被溫柔地洗了出來，安靜地貼在這裡</p>
+            <div class="h-0.5 w-12 bg-amber-200 mx-auto mt-4"></div>
+        </div>
+
+        <div id="polaroid-wall" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-8">
+            <!-- 讀取中骨架屏 -->
+            <div id="wall-loading" class="col-span-full py-12 text-center text-stone-400">
+                <span class="inline-block animate-bounce text-amber-600 text-2xl mb-4">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </span>
+                <p class="serif italic text-base">正在從讀書會雲端晾乾相片中，請稍候...</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="text-center py-8 text-stone-400 text-sm border-t border-amber-100/30 bg-white/60 backdrop-blur-sm w-full">
+    <p>《卡芙涅》讀書會 專屬互動頁面</p>
+</footer>
+
+<!-- 自訂 Modal -->
+<div id="custom-modal" class="fixed inset-0 bg-stone-900/30 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="modal-content" class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-xl transform scale-95 transition-transform duration-300 text-center border border-amber-50">
+        <div id="modal-icon" class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4"></div>
+        <h3 id="modal-title" class="serif text-xl font-bold text-stone-800 mb-2"></h3>
+        <p id="modal-message" class="text-stone-600 mb-6 leading-relaxed text-sm"></p>
+        <button onclick="closeModal()" class="w-full bg-amber-700 text-white py-3 rounded-xl font-medium hover:bg-amber-800 transition-colors shadow-md">
+            我知道了
+        </button>
     </div>
+</div>
 
-    <script>
-        // =========================================================================
-        // 🔒 您的專屬 Google Apps Script API 部署網址（已與您最新部署 [FpVJE] 完全同步）
-        // =========================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxuA0J644s6mzln_giroZkGwSl0YIHKvn7-N_BuGxFCBkEvbpbd-Jkew5FIxshFpVJE/exec";
+<script>
+// =========================================================================
+// ✅ 修正3：統一使用您提供的最新 GAS 網址
+// =========================================================================
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwFlhgfpFTqP00Q2V9VYxtbS_zJ7wufH7DDT3Jb6Djkb116XgBm0D_ysfr6fPtqKwUa/exec";
 
-        const photoInput = document.getElementById('photo-input');
-        const photoPreview = document.getElementById('photo-preview');
-        const uploadPlaceholder = document.getElementById('upload-placeholder');
-        const resetPhotoBtn = document.getElementById('reset-photo');
-        const submitBtn = document.getElementById('submit-btn');
-        const btnText = document.getElementById('btn-text');
-        const polaroidWall = document.getElementById('polaroid-wall');
+// DOM 節點
+const photoInput        = document.getElementById('photo-input');
+const photoPreview      = document.getElementById('photo-preview');
+const uploadPlaceholder = document.getElementById('upload-placeholder');
+const resetPhotoBtn     = document.getElementById('reset-photo');
+const submitBtn         = document.getElementById('submit-btn');
+const btnText           = document.getElementById('btn-text');
+const polaroidWall      = document.getElementById('polaroid-wall');
+const reflectionTA      = document.getElementById('reflection');
+const charCount         = document.getElementById('char-count');
+const apiStatus         = document.getElementById('api-status');
 
-        let base64ImageString = "";
+let base64ImageString = "";
 
-        // 預設的 4 張溫馨範例卡片（若雲端完全沒照片時顯示為暖場，若有照片則會與雲端照片並存）
-        const mockCards = [
-            {
-                imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=600",
-                reflection: "一杯手沖咖啡，佐晨光與書香。這是重新開啟生活秩序的儀式感。",
-                username: "晨光讀者",
-                time: "2026.05.17",
-                backupUrl: ""
-            },
-            {
-                imageUrl: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=600",
-                reflection: "曬乾的床單滿溢著陽光與乾淨肥皂香，像是把破碎的日常輕輕撫平了。",
-                username: "陽光晴子",
-                time: "2026.05.16",
-                backupUrl: ""
-            },
-            {
-                imageUrl: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=600",
-                reflection: "燉一鍋溫潤的熱湯，聽著它咕嘟咕嘟。那一刻，廚房就是靈魂最安全的避難所。",
-                username: "慢活廚娘",
-                time: "2026.05.15",
-                backupUrl: ""
-            },
-            {
-                imageUrl: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=600",
-                reflection: "拂去每一本書上的微塵、重新排序。擦拭整理書本的同時，我的心靈也清朗了起來。",
-                username: "整理控阿維",
-                time: "2026.05.14",
-                backupUrl: ""
-            }
-        ];
+// =========================================================================
+// 預設暖場範例卡片（雲端為空時顯示；雲端有資料時亦會一併附在最後）
+// =========================================================================
+const mockCards = [
+    {
+        imageUrl:  "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=600",
+        reflection:"一杯手沖咖啡，佐晨光與書香。這是重新開啟生活秩序的儀式感。",
+        username:  "晨光讀者", time: "2026.05.17"
+    },
+    {
+        imageUrl:  "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=600",
+        reflection:"曬乾的床單滿溢著陽光與乾淨肥皂香，像是把破碎的日常輕輕撫平了。",
+        username:  "陽光晴子", time: "2026.05.16"
+    },
+    {
+        imageUrl:  "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=600",
+        reflection:"燉一鍋溫潤的熱湯，聽著它咕嘟咕嘟。那一刻，廚房就是靈魂最安全的避難所。",
+        username:  "慢活廚娘", time: "2026.05.15"
+    },
+    {
+        imageUrl:  "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=600",
+        reflection:"拂去每一本書上的微塵、重新排序。擦拭整理書本時，我的心靈也清朗了起來。",
+        username:  "整理控阿維", time: "2026.05.14"
+    }
+];
 
-        // 頁面載入時，自動從雲端載入歷史紀錄
-        window.addEventListener('DOMContentLoaded', loadHistoryFromCloud);
+// =========================================================================
+// 字數計算
+// =========================================================================
+reflectionTA.addEventListener('input', () => {
+    charCount.textContent = reflectionTA.value.length;
+});
 
-        function loadHistoryFromCloud() {
-            fetch(GAS_WEB_APP_URL)
-                .then(response => response.json())
-                .then(data => {
-                    // 清空讀取中動畫
-                    polaroidWall.innerHTML = "";
-                    
-                    if (data && data.length > 0 && !data.error) {
-                        // 如果雲端有照片，將雲端上傳的照片全部釘上牆
-                        data.forEach(item => {
-                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, item.backupUrl, false);
-                        });
-                        // 並把預設的暖場範例加在最後面
-                        mockCards.forEach(item => {
-                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, item.backupUrl, false);
-                        });
-                    } else {
-                        // 若雲端是空的，僅顯示 4 張暖場範例
-                        mockCards.forEach(item => {
-                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, item.backupUrl, false);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error("無法載入雲端相簿牆：", error);
-                    // 若連線失敗，直接套用預設暖場卡片，確保網站依然完美運作
-                    polaroidWall.innerHTML = "";
-                    mockCards.forEach(item => {
-                        addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, "", false);
-                    });
+// =========================================================================
+// 拖曳上傳支援（桌機）
+// =========================================================================
+const uploadZone = document.getElementById('upload-placeholder');
+['dragenter','dragover'].forEach(evt => {
+    uploadZone.addEventListener(evt, e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+});
+['dragleave','drop'].forEach(evt => {
+    uploadZone.addEventListener(evt, e => { e.preventDefault(); uploadZone.classList.remove('drag-over'); });
+});
+uploadZone.addEventListener('drop', e => {
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) processImageFile(file);
+});
+
+// =========================================================================
+// ✅ 修正4：圖片壓縮 — 用 Canvas 把圖片縮到最大 1200px 並轉成 JPEG 0.82 品質
+//    避免超過 GAS urlfetch 的 ~10MB payload 上限，同時加速上傳
+// =========================================================================
+function compressImage(file, maxSize = 1200, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('FileReader 讀取失敗'));
+        reader.onload = e => {
+            const img = new Image();
+            img.onerror = () => reject(new Error('圖片解析失敗'));
+            img.onload = () => {
+                let { width, height } = img;
+                if (width > maxSize || height > maxSize) {
+                    if (width > height) { height = Math.round(height * maxSize / width);  width = maxSize; }
+                    else                { width  = Math.round(width  * maxSize / height); height = maxSize; }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width; canvas.height = height;
+                canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function processImageFile(file) {
+    if (file.size > 15 * 1024 * 1024) { // 15MB 原檔上限（壓縮後會小很多）
+        showModal('檔案過大', '請選擇 15MB 以下的照片，壓縮後將自動縮小！', 'warning');
+        return;
+    }
+    compressImage(file).then(dataUrl => {
+        base64ImageString = dataUrl;
+        photoPreview.src  = dataUrl;
+        photoPreview.classList.remove('hidden');
+        uploadPlaceholder.classList.add('hidden');
+        resetPhotoBtn.classList.remove('hidden');
+    }).catch(() => {
+        showModal('圖片讀取失敗', '無法處理此圖片，請換一張試試！', 'error');
+    });
+}
+
+photoInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) processImageFile(file);
+});
+
+resetPhotoBtn.addEventListener('click', e => {
+    e.preventDefault();
+    photoInput.value  = '';
+    photoPreview.src  = '';
+    base64ImageString = '';
+    photoPreview.classList.add('hidden');
+    uploadPlaceholder.classList.remove('hidden');
+    resetPhotoBtn.classList.add('hidden');
+});
+
+// =========================================================================
+// 隨機微偏轉（拍立得）
+// =========================================================================
+function getRandomRotation() {
+    const vals = [-3,-2,-1,1,2,3];
+    const r = vals[Math.floor(Math.random() * vals.length)];
+    return { style: `transform:rotate(${r}deg);--rand-rot:${r}deg;`, tapeRot: r + (Math.random()*4-2) };
+}
+
+function getFormattedToday() {
+    const d = new Date();
+    return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// =========================================================================
+// ✅ 修正5：addPolaroidToWall — 改用 JS 設定 onerror 避免模板字串 XSS 問題
+// =========================================================================
+const FALLBACK_IMG = "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=600";
+
+function addPolaroidToWall(imgSrc, text, author, dateStr, backupSrc = "", isNewUpload = false) {
+    const rot  = getRandomRotation();
+    const card = document.createElement('div');
+    card.className = `polaroid-card relative p-4 pb-10 rounded-sm ${isNewUpload ? 'animate-pin' : ''}`;
+    card.style.cssText = rot.style;
+
+    // 安全的圖片容器
+    const imgWrapper = document.createElement('div');
+    imgWrapper.className = 'aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30';
+
+    const imgEl = document.createElement('img');
+    imgEl.className = 'w-full h-full object-cover';
+    imgEl.loading   = 'lazy';
+    imgEl.alt       = `${author} 的家事時刻`;
+
+    // ✅ 修正6：三段式防破圖 (原圖 → 備用直連 → Unsplash 保底)，用 JS 安全賦值
+    let errorStage = 0;
+    imgEl.onerror = () => {
+        errorStage++;
+        if (errorStage === 1 && backupSrc && imgEl.src !== backupSrc) {
+            imgEl.src = backupSrc;
+        } else if (errorStage <= 2 && imgEl.src !== FALLBACK_IMG) {
+            imgEl.src = FALLBACK_IMG;
+        } else {
+            imgEl.onerror = null; // 防止無限循環
+        }
+    };
+    imgEl.src = imgSrc || FALLBACK_IMG;
+
+    imgWrapper.appendChild(imgEl);
+
+    // 紙膠帶裝飾
+    const tape = document.createElement('div');
+    tape.className = 'absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] border-l border-r border-dashed border-amber-300/30 shadow-sm';
+    tape.style.transform = `translate(-50%, 0) rotate(${rot.tapeRot}deg)`;
+
+    // 文字區
+    const textDiv = document.createElement('div');
+    textDiv.className = 'mt-4 px-1 text-center';
+
+    const quote = document.createElement('p');
+    quote.className = 'serif text-stone-700 italic text-sm leading-relaxed line-clamp-3';
+    // ✅ 修正7：用 textContent 避免 XSS（使用者輸入的文字）
+    quote.textContent = `「${text}」`;
+
+    const meta = document.createElement('div');
+    meta.className = 'mt-3 flex items-center justify-between text-[11px] text-amber-800/60 font-medium';
+    const authorSpan = document.createElement('span');
+    authorSpan.textContent = `— ${author}`;
+    const dateSpan = document.createElement('span');
+    dateSpan.textContent = dateStr;
+    meta.appendChild(authorSpan);
+    meta.appendChild(dateSpan);
+
+    textDiv.appendChild(quote);
+    textDiv.appendChild(meta);
+
+    card.appendChild(tape);
+    card.appendChild(imgWrapper);
+    card.appendChild(textDiv);
+
+    if (isNewUpload) {
+        polaroidWall.insertBefore(card, polaroidWall.firstChild);
+    } else {
+        polaroidWall.appendChild(card);
+    }
+}
+
+// =========================================================================
+// ✅ 修正8：載入歷史 — 加上 cache-busting、完整的錯誤處理與 timeout 防止永久等待
+// =========================================================================
+function loadHistoryFromCloud() {
+    // 加上 timestamp 避免瀏覽器快取舊版 JSON
+    const url = `${GAS_WEB_APP_URL}?t=${Date.now()}`;
+
+    // 10 秒 timeout（GAS 冷啟動有時較慢）
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+
+    fetch(url, { signal: controller.signal })
+        .then(res => {
+            clearTimeout(timer);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            polaroidWall.innerHTML = "";
+
+            // ✅ 雲端有資料：先顯示雲端照片，再附上暖場範例
+            if (Array.isArray(data) && data.length > 0 && !data.error) {
+                data.forEach(item => {
+                    addPolaroidToWall(
+                        item.imageUrl  || "",
+                        item.reflection|| "(無文字)",
+                        item.username  || "匿名讀者",
+                        item.time      || "",
+                        item.backupUrl || "",
+                        false
+                    );
                 });
-        }
-
-        // 把照片拼成拍立得並釘上牆的通用功能（支援備用直連網址）
-        function addPolaroidToWall(imgSrc, text, author, dateStr, backupSrc = "", isNewUpload = false) {
-            const rot = getRandomRotationClass();
-            const card = document.createElement('div');
-            card.className = `polaroid-card relative p-4 pb-10 rounded-sm ${isNewUpload ? 'animate-pin' : ''}`;
-            card.setAttribute('style', rot.style);
-            
-            // 安全防破圖處理：如果第一種網址載入失敗，自動換到備用網址；如果也失敗，顯示精美預設圖
-            const fallbackJS = `if (this.src !== '${backupSrc}' && '${backupSrc}') { this.src = '${backupSrc}'; } else { this.onerror = null; this.src = 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=600'; }`;
-
-            card.innerHTML = `
-                <!-- 半透明紙膠帶裝飾 -->
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] border-l border-r border-dashed border-amber-300/30 shadow-sm" style="${rot.tapeStyle}"></div>
-                <!-- 影像框 -->
-                <div class="aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30">
-                    <img src="${imgSrc}" class="w-full h-full object-cover" loading="lazy" onerror="${fallbackJS}">
-                </div>
-                <!-- 文字與簽名 -->
-                <div class="mt-4 px-1 text-center">
-                    <p class="serif text-stone-700 italic text-sm leading-relaxed line-clamp-3">「${text}」</p>
-                    <div class="mt-3 flex items-center justify-between text-[11px] text-amber-800/60 font-medium">
-                        <span>— ${author}</span>
-                        <span>${dateStr}</span>
-                    </div>
-                </div>
-            `;
-
-            if (isNewUpload) {
-                // 如果是當下剛上傳的，插在最前面
-                polaroidWall.insertBefore(card, polaroidWall.firstChild);
-            } else {
-                // 如果是載入歷史，順序往後排
-                polaroidWall.appendChild(card);
+                // 顯示連線狀態
+                apiStatus.classList.remove('hidden');
             }
-        }
-
-        // 監聽並處理解析相片檔案
-        photoInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                // 限制檔案大小 (5MB 內)
-                if (file.size > 5 * 1024 * 1024) {
-                    showModal("檔案過大", "為了順利上傳，請選擇 5MB 以下的照片喔！", "warning");
-                    photoInput.value = '';
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    photoPreview.src = event.target.result;
-                    base64ImageString = event.target.result;
-                    photoPreview.classList.remove('hidden');
-                    uploadPlaceholder.classList.add('hidden');
-                    resetPhotoBtn.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
+            // 最後補上暖場範例
+            mockCards.forEach(c => addPolaroidToWall(c.imageUrl, c.reflection, c.username, c.time, "", false));
+        })
+        .catch(err => {
+            clearTimeout(timer);
+            console.warn("雲端載入失敗，使用預設卡片：", err.message);
+            polaroidWall.innerHTML = "";
+            // 連線失敗時仍顯示範例，網站不中斷
+            mockCards.forEach(c => addPolaroidToWall(c.imageUrl, c.reflection, c.username, c.time, "", false));
         });
+}
 
-        // 重設照片欄位
-        resetPhotoBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            photoInput.value = '';
-            photoPreview.src = '';
-            base64ImageString = "";
-            photoPreview.classList.add('hidden');
-            uploadPlaceholder.classList.remove('hidden');
-            resetPhotoBtn.classList.add('hidden');
-        });
+window.addEventListener('DOMContentLoaded', loadHistoryFromCloud);
 
-        // 隨機生成微幅偏轉的 CSS 角度
-        function getRandomRotationClass() {
-            const rotValues = [-3, -2, -1, 1, 2, 3];
-            const randVal = rotValues[Math.floor(Math.random() * rotValues.length)];
-            return {
-                style: `transform: rotate(${randVal}deg); --rand-rot: ${randVal}deg;`,
-                tapeStyle: `transform: translate(-50%, 0) rotate(${randVal + (Math.random() * 4 - 2)}deg);`
-            };
-        }
+// =========================================================================
+// 表單提交
+// =========================================================================
+function handleSubmit() {
+    const reflection = reflectionTA.value.trim();
+    const username   = document.getElementById('username').value.trim() || "匿名讀者";
 
-        // 獲取今天的台灣日期字串 (YYYY.MM.DD)
-        function getFormattedToday() {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}.${month}.${day}`;
-        }
+    if (!base64ImageString) {
+        showModal("提醒", "請先點擊相機框選擇一張家事照片喔！", "info"); return;
+    }
+    if (!reflection) {
+        showModal("提醒", "請寫下隻字片語，分享這瞬間的心情吧！", "info"); return;
+    }
 
-        // 提交處理
-        function handleSubmit() {
-            const reflection = document.getElementById('reflection').value.trim();
-            const username = document.getElementById('username').value.trim() || "匿名讀者";
+    // 鎖定按鈕，防止重複送出
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-70','cursor-not-allowed');
+    btnText.innerHTML  = '<span class="loader"></span> 努力上傳中...';
 
-            if (!base64ImageString) {
-                showModal("提醒", "請先點擊相機框選擇一張家事照片喔！", "info");
-                return;
-            }
-            if (!reflection) {
-                showModal("提醒", "請寫下隻字片語，分享這瞬間的心情吧！", "info");
-                return;
-            }
+    const payload = { image: base64ImageString, username, reflection };
 
-            // 按鈕切換至讀取中狀態，防止重複提交
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
-            btnText.innerHTML = `<span class="loader"></span> 努力上傳中...`;
+    // ✅ 修正9：GAS 跨域要求 Content-Type 必須是 text/plain（不能是 application/json）
+    //    同時加上 15 秒 timeout 防止 GAS 冷啟動時無限等待
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
 
-            // 準備上傳資料包
-            const payload = {
-                image: base64ImageString,
-                username: username,
-                reflection: reflection
-            };
+    fetch(GAS_WEB_APP_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body:    JSON.stringify(payload),
+        signal:  controller.signal
+    })
+    .then(res => {
+        clearTimeout(timer);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            showModal("✨ 上傳成功！", "您的照片已安全存入讀書會的 Google 雲端硬碟，並已永久貼到下方拍立得牆上！", "success");
 
-            // 呼叫 API 進行傳輸
-            fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    showModal("✨ 上傳成功！", "您的照片已經安全存入讀書會的 Google 雲端硬碟，並已永久貼到下方拍立得牆上！", "success");
-                    
-                    // 動態建立並釘上新的拍立得 (優先使用 GAS 回傳的直連網址)
-                    const displayImgUrl = data.imageUrl || base64ImageString;
-                    addPolaroidToWall(displayImgUrl, reflection, username, getFormattedToday(), "", true);
+            // 優先使用 GAS 回傳的直連網址；沒有則用壓縮後 base64 顯示
+            addPolaroidToWall(data.imageUrl || base64ImageString, reflection, username, getFormattedToday(), "", true);
 
-                    // 清空輸入框
-                    document.getElementById('reflection').value = '';
-                    document.getElementById('username').value = '';
-                    resetPhotoBtn.click();
+            reflectionTA.value = '';
+            charCount.textContent = '0';
+            document.getElementById('username').value = '';
+            resetPhotoBtn.click();
+            apiStatus.classList.remove('hidden');
 
-                    // 延遲滾動至展示牆，好讓使用者看到他的照片在上面搖擺貼上的動畫
-                    setTimeout(() => {
-                        document.getElementById('wall-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 1000);
-
-                } else {
-                    showModal("上傳出錯", "錯誤訊息：" + data.message, "error");
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showModal("連線異常", "無法連接至雲端伺服器，請檢查您的網路或 GAS 網址設定是否有誤。", "error");
-            })
-            .finally(() => {
-                // 恢復按鈕狀態
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
-                btnText.innerText = "上傳至讀書會雲端硬碟";
-            });
-        }
-
-        // ==========================================
-        // 自訂 Modal 提示視窗控制器
-        // ==========================================
-        const modal = document.getElementById('custom-modal');
-        const modalContent = modal.querySelector('div');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        const modalIcon = document.getElementById('modal-icon');
-
-        function showModal(title, message, type = 'info') {
-            modalTitle.innerText = title;
-            modalMessage.innerText = message;
-            
-            // 根據類型變更圖示與背景色
-            let iconHtml = '';
-            if (type === 'success') {
-                modalIcon.className = "w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4";
-                iconHtml = '<i class="fa-solid fa-circle-check text-2xl"></i>';
-            } else if (type === 'warning') {
-                modalIcon.className = "w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-4";
-                iconHtml = '<i class="fa-solid fa-triangle-exclamation text-2xl"></i>';
-            } else if (type === 'error') {
-                modalIcon.className = "w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4";
-                iconHtml = '<i class="fa-solid fa-circle-exclamation text-2xl"></i>';
-            } else {
-                modalIcon.className = "w-16 h-16 bg-amber-50/50 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4";
-                iconHtml = '<i class="fa-solid fa-info text-2xl"></i>';
-            }
-            modalIcon.innerHTML = iconHtml;
-
-            // 顯示動畫
-            modal.classList.remove('opacity-0', 'pointer-events-none');
             setTimeout(() => {
-                modalContent.classList.remove('scale-95');
-                modalContent.classList.add('scale-100');
-            }, 10);
+                document.getElementById('wall-section').scrollIntoView({ behavior:'smooth', block:'start' });
+            }, 1000);
+        } else {
+            showModal("上傳出錯", "錯誤訊息：" + (data.message || "未知錯誤，請稍後再試"), "error");
         }
+    })
+    .catch(err => {
+        clearTimeout(timer);
+        console.error('上傳失敗：', err);
+        if (err.name === 'AbortError') {
+            showModal("連線逾時", "GAS 伺服器回應太慢（超過 15 秒）。可能是首次冷啟動，請稍後再試！", "warning");
+        } else {
+            showModal("連線異常", "無法連接至雲端伺服器，請確認網路是否正常，或稍後再試。", "error");
+        }
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-70','cursor-not-allowed');
+        btnText.textContent = "上傳至讀書會雲端硬碟";
+    });
+}
 
-        function closeModal() {
-            modalContent.classList.remove('scale-100');
-            modalContent.classList.add('scale-95');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-    </script>
+// =========================================================================
+// Modal 控制
+// =========================================================================
+const modal        = document.getElementById('custom-modal');
+const modalContent = document.getElementById('modal-content');
+
+function showModal(title, message, type = 'info') {
+    document.getElementById('modal-title').textContent   = title;
+    document.getElementById('modal-message').textContent = message;
+
+    const iconEl = document.getElementById('modal-icon');
+    const configs = {
+        success: { cls: 'bg-emerald-50 text-emerald-500', icon: 'fa-circle-check' },
+        warning: { cls: 'bg-amber-50 text-amber-500',     icon: 'fa-triangle-exclamation' },
+        error:   { cls: 'bg-rose-50 text-rose-500',       icon: 'fa-circle-exclamation' },
+        info:    { cls: 'bg-amber-50/50 text-amber-600',  icon: 'fa-info' }
+    };
+    const { cls, icon } = configs[type] || configs.info;
+    iconEl.className = `w-16 h-16 ${cls} rounded-full flex items-center justify-center mx-auto mb-4`;
+    iconEl.innerHTML = `<i class="fa-solid ${icon} text-2xl"></i>`;
+
+    modal.classList.remove('opacity-0','pointer-events-none');
+    requestAnimationFrame(() => {
+        modalContent.classList.remove('scale-95');
+        modalContent.classList.add('scale-100');
+    });
+}
+
+function closeModal() {
+    modalContent.classList.remove('scale-100');
+    modalContent.classList.add('scale-95');
+    modal.classList.add('opacity-0','pointer-events-none');
+}
+
+// 點擊遮罩也可關閉 Modal
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+</script>
 </body>
 </html>
