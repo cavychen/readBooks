@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -208,9 +209,9 @@
 
     <script>
         // =========================================================================
-        // 🔒 您的專屬 Google Apps Script API 部署網址（已與您最新的部署完全同步）
+        // 🔒 您的專屬 Google Apps Script API 部署網址（已與您最新部署 [FpVJE] 完全同步）
         // =========================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwFlhgfpFTqP00Q2V9VYxtbS_zJ7wufH7DDT3Jb6Djkb116XgBm0D_ysfr6fPtqKwUa/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxuA0J644s6mzln_giroZkGwSl0YIHKvn7-N_BuGxFCBkEvbpbd-Jkew5FIxshFpVJE/exec";
 
         const photoInput = document.getElementById('photo-input');
         const photoPreview = document.getElementById('photo-preview');
@@ -228,25 +229,29 @@
                 imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=600",
                 reflection: "一杯手沖咖啡，佐晨光與書香。這是重新開啟生活秩序的儀式感。",
                 username: "晨光讀者",
-                time: "2026.05.17"
+                time: "2026.05.17",
+                backupUrl: ""
             },
             {
                 imageUrl: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=600",
                 reflection: "曬乾的床單滿溢著陽光與乾淨肥皂香，像是把破碎的日常輕輕撫平了。",
                 username: "陽光晴子",
-                time: "2026.05.16"
+                time: "2026.05.16",
+                backupUrl: ""
             },
             {
                 imageUrl: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=600",
                 reflection: "燉一鍋溫潤的熱湯，聽著它咕嘟咕嘟。那一刻，廚房就是靈魂最安全的避難所。",
                 username: "慢活廚娘",
-                time: "2026.05.15"
+                time: "2026.05.15",
+                backupUrl: ""
             },
             {
                 imageUrl: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=600",
                 reflection: "拂去每一本書上的微塵、重新排序。擦拭整理書本的同時，我的心靈也清朗了起來。",
                 username: "整理控阿維",
-                time: "2026.05.14"
+                time: "2026.05.14",
+                backupUrl: ""
             }
         ];
 
@@ -260,19 +265,19 @@
                     // 清空讀取中動畫
                     polaroidWall.innerHTML = "";
                     
-                    if (data && data.length > 0) {
+                    if (data && data.length > 0 && !data.error) {
                         // 如果雲端有照片，將雲端上傳的照片全部釘上牆
                         data.forEach(item => {
-                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, false);
+                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, item.backupUrl, false);
                         });
                         // 並把預設的暖場範例加在最後面
                         mockCards.forEach(item => {
-                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, false);
+                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, item.backupUrl, false);
                         });
                     } else {
                         // 若雲端是空的，僅顯示 4 張暖場範例
                         mockCards.forEach(item => {
-                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, false);
+                            addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, item.backupUrl, false);
                         });
                     }
                 })
@@ -281,24 +286,27 @@
                     // 若連線失敗，直接套用預設暖場卡片，確保網站依然完美運作
                     polaroidWall.innerHTML = "";
                     mockCards.forEach(item => {
-                        addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, false);
+                        addPolaroidToWall(item.imageUrl, item.reflection, item.username, item.time, "", false);
                     });
                 });
         }
 
-        // 把照片拼成拍立得並釘上牆的通用功能
-        function addPolaroidToWall(imgSrc, text, author, dateStr, isNewUpload = false) {
+        // 把照片拼成拍立得並釘上牆的通用功能（支援備用直連網址）
+        function addPolaroidToWall(imgSrc, text, author, dateStr, backupSrc = "", isNewUpload = false) {
             const rot = getRandomRotationClass();
             const card = document.createElement('div');
             card.className = `polaroid-card relative p-4 pb-10 rounded-sm ${isNewUpload ? 'animate-pin' : ''}`;
             card.setAttribute('style', rot.style);
             
+            // 安全防破圖處理：如果第一種網址載入失敗，自動換到備用網址；如果也失敗，顯示精美預設圖
+            const fallbackJS = `if (this.src !== '${backupSrc}' && '${backupSrc}') { this.src = '${backupSrc}'; } else { this.onerror = null; this.src = 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=600'; }`;
+
             card.innerHTML = `
                 <!-- 半透明紙膠帶裝飾 -->
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] border-l border-r border-dashed border-amber-300/30 shadow-sm" style="${rot.tapeStyle}"></div>
                 <!-- 影像框 -->
                 <div class="aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30">
-                    <img src="${imgSrc}" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=600'">
+                    <img src="${imgSrc}" class="w-full h-full object-cover" loading="lazy" onerror="${fallbackJS}">
                 </div>
                 <!-- 文字與簽名 -->
                 <div class="mt-4 px-1 text-center">
@@ -410,9 +418,9 @@
                 if (data.status === 'success') {
                     showModal("✨ 上傳成功！", "您的照片已經安全存入讀書會的 Google 雲端硬碟，並已永久貼到下方拍立得牆上！", "success");
                     
-                    // 動態建立並釘上新的拍立得 (使用 GAS 回傳的直連網址，防止重新整理前破圖)
+                    // 動態建立並釘上新的拍立得 (優先使用 GAS 回傳的直連網址)
                     const displayImgUrl = data.imageUrl || base64ImageString;
-                    addPolaroidToWall(displayImgUrl, reflection, username, getFormattedToday(), true);
+                    addPolaroidToWall(displayImgUrl, reflection, username, getFormattedToday(), "", true);
 
                     // 清空輸入框
                     document.getElementById('reflection').value = '';
