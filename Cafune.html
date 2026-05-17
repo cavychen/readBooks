@@ -11,7 +11,7 @@
         
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            /* 暖陽奶油白底色 (#FFFDF9) 搭配精緻內嵌 SVG 暖金布織紋，呈現溫暖乾淨的手工編織感 */
+            /* 暖陽奶油白底色搭配精緻內嵌 SVG 暖金布織紋，呈現溫暖乾淨的手工編織感 */
             background-color: #fffdf9;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M0 0h16v1H0zm0 4h16v1H0zm0 8h16v1H0zm0 4h16v1H0zM0 0h1v16H0zm4 0h1v16H4zm8 0h1v16h-1zm4 0h1v16h-1z' fill='%23d9cbb6' fill-opacity='0.22'/%3E%3C/svg%3E");
             color: #4a3e3d;
@@ -21,7 +21,7 @@
             font-family: 'Noto Serif TC', serif;
         }
 
-        /* 溫暖編織感卡片邊條 */
+        /* 溫慢編織感卡片邊條 */
         .quote-card {
             border-left: 4px solid #d99b59; /* 暖焦糖橘 */
             background-color: rgba(253, 250, 242, 0.85);
@@ -49,6 +49,34 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* 拍立得照片卡片樣式 */
+        .polaroid-card {
+            background-color: #faf9f5;
+            box-shadow: 0 8px 16px rgba(139, 92, 26, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(217, 203, 182, 0.4);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .polaroid-card:hover {
+            transform: rotate(0deg) scale(1.05) translateY(-8px) !important;
+            box-shadow: 0 20px 30px rgba(139, 92, 26, 0.15), 0 4px 8px rgba(0, 0, 0, 0.04);
+            z-index: 20;
+        }
+
+        /* 動態新增拍立得的動畫 */
+        @keyframes pinPhoto {
+            0% {
+                opacity: 0;
+                transform: scale(0.7) translateY(-50px) rotate(-10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0) rotate(var(--rand-rot, -1deg));
+            }
+        }
+        .animate-pin {
+            animation: pinPhoto 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -57,7 +85,7 @@
     <main class="flex-grow">
         <!-- 頂部橫幅 -->
         <header class="max-w-4xl mx-auto pt-20 pb-12 px-6 text-center">
-            <span class="text-amber-700 font-bold tracking-widest text-sm uppercase block mb-3">Cafuné Book Club</span>
+            <span class="text-amber-700 font-bold tracking-widest text-sm uppercase block mb-3">Kafne Book Club</span>
             <h1 class="serif text-4xl md:text-5xl font-bold mb-4 tracking-wider text-amber-950">卡芙涅：家事撫慰的瞬間</h1>
             <div class="h-1 w-20 bg-amber-500/60 mx-auto mb-8 rounded-full"></div>
             <p class="text-lg text-stone-600 leading-relaxed max-w-2xl mx-auto">
@@ -84,7 +112,7 @@
                     <br><br>
                     是一頓細心烹調後的晚餐香氣？是洗淨晾乾後帶著陽光味道的床單？還是把雜亂角落整理乾淨後的清爽？
                     <br><br>
-                    我們邀請你，上傳一張此刻令你心裡感到滿足的「家事時刻」照片，並留下一句話。上傳的照片將會安全地儲存於讀書會的雲端紀錄中，讓我們一起看見日常之美。
+                    我們邀請你，上傳一張此刻令你心裡感到滿足的「家事時刻」照片，並留下一句話。上傳的照片將會安全地儲存於讀書會的雲端紀錄中，同時也會被釘在下方的「拍立得撫慰牆」上，讓我們一起看見日常之美。
                 </p>
             </div>
         </section>
@@ -137,6 +165,83 @@
                 </div>
             </div>
         </section>
+
+        <!-- 拍立得照片展示牆區 -->
+        <section id="wall-section" class="max-w-6xl mx-auto px-6 pb-32">
+            <div class="text-center mb-16">
+                <h3 class="serif text-3xl font-bold text-amber-950 mb-3">居家撫慰拍立得牆</h3>
+                <p class="text-stone-500 text-sm">每個平凡的瞬間，都被溫柔地洗了出來，安靜地貼在這裡</p>
+                <div class="h-0.5 w-12 bg-amber-200 mx-auto mt-4"></div>
+            </div>
+
+            <!-- 拍立得格線佈局 -->
+            <div id="polaroid-wall" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-8">
+                
+                <!-- 預設拍立得 1 -->
+                <div class="polaroid-card relative p-4 pb-10 rounded-sm transform -rotate-2" style="--rand-rot: -2deg;">
+                    <!-- 半透明紙膠帶裝飾 -->
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] -rotate-3 border-l border-r border-dashed border-amber-300/30 shadow-sm"></div>
+                    <!-- 影像框 -->
+                    <div class="aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30">
+                        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="[手沖咖啡]">
+                    </div>
+                    <!-- 文字與簽名 -->
+                    <div class="mt-4 px-1 text-center">
+                        <p class="serif text-stone-700 italic text-sm leading-relaxed line-clamp-3">「一杯手沖咖啡，佐晨光與書香。這是重新開啟生活秩序的儀式感。」</p>
+                        <div class="mt-3 flex items-center justify-between text-[11px] text-amber-800/60 font-medium">
+                            <span>— 晨光讀者</span>
+                            <span>2026.05.17</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 預設拍立得 2 -->
+                <div class="polaroid-card relative p-4 pb-10 rounded-sm transform rotate-1" style="--rand-rot: 1deg;">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] rotate-2 border-l border-r border-dashed border-amber-300/30 shadow-sm"></div>
+                    <div class="aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30">
+                        <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="[乾淨床單]">
+                    </div>
+                    <div class="mt-4 px-1 text-center">
+                        <p class="serif text-stone-700 italic text-sm leading-relaxed line-clamp-3">「曬乾的床單滿溢著陽光與乾淨肥皂香，像是把破碎的日常輕輕撫平了。」</p>
+                        <div class="mt-3 flex items-center justify-between text-[11px] text-amber-800/60 font-medium">
+                            <span>— 陽光晴子</span>
+                            <span>2026.05.16</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 預設拍立得 3 -->
+                <div class="polaroid-card relative p-4 pb-10 rounded-sm transform -rotate-1" style="--rand-rot: -1deg;">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] -rotate-1 border-l border-r border-dashed border-amber-300/30 shadow-sm"></div>
+                    <div class="aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30">
+                        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="[燉熱湯]">
+                    </div>
+                    <div class="mt-4 px-1 text-center">
+                        <p class="serif text-stone-700 italic text-sm leading-relaxed line-clamp-3">「燉一鍋溫潤的熱湯，聽著它咕嘟咕嘟。那一刻，廚房就是靈魂最安全的避難所。」</p>
+                        <div class="mt-3 flex items-center justify-between text-[11px] text-amber-800/60 font-medium">
+                            <span>— 慢活廚娘</span>
+                            <span>2026.05.15</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 預設拍立得 4 -->
+                <div class="polaroid-card relative p-4 pb-10 rounded-sm transform rotate-2" style="--rand-rot: 2deg;">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] rotate-3 border-l border-r border-dashed border-amber-300/30 shadow-sm"></div>
+                    <div class="aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30">
+                        <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="[整理書架]">
+                    </div>
+                    <div class="mt-4 px-1 text-center">
+                        <p class="serif text-stone-700 italic text-sm leading-relaxed line-clamp-3">「拂去每一本書上的微塵、重新排序。擦拭整理書本的同時，我的心靈也清朗了起來。」</p>
+                        <div class="mt-3 flex items-center justify-between text-[11px] text-amber-800/60 font-medium">
+                            <span>— 整理控阿維</span>
+                            <span>2026.05.14</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
     </main>
 
     <!-- 頁尾 -->
@@ -152,7 +257,7 @@
             </div>
             <h3 id="modal-title" class="serif text-xl font-bold text-stone-800 mb-2"></h3>
             <p id="modal-message" class="text-stone-600 mb-6 leading-relaxed text-sm"></p>
-            <button onclick="closeModal()" class="w-full bg-amber-700 text-white py-3 rounded-xl font-medium hover:bg-amber-800 transition-colors shadow-md">
+            <button onclick="closeModal()" class="w-full bg-amber-700 text-white py-3 rounded-xl font-medium hover:bg-amber-700 transition-colors shadow-md">
                 我知道了
             </button>
         </div>
@@ -160,9 +265,9 @@
 
     <script>
         // =========================================================================
-        // 🔒 您的專屬 Google Apps Script API 部署網址（已設定完成）
+        // 🔒 您的專屬 Google Apps Script API 部署網址（已替換為您的最新部署網址）
         // =========================================================================
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwOxBb-Yz0VlhLh7cdEJ5ek1z1-MnRpWxARXjYebGtHFzmDE8g872jzHFfIw1g7ebY5/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwFlhgfpFTqP00Q2V9VYxtbS_zJ7wufH7DDT3Jb6Djkb116XgBm0D_ysfr6fPtqKwUa/exec";
 
         const photoInput = document.getElementById('photo-input');
         const photoPreview = document.getElementById('photo-preview');
@@ -170,6 +275,7 @@
         const resetPhotoBtn = document.getElementById('reset-photo');
         const submitBtn = document.getElementById('submit-btn');
         const btnText = document.getElementById('btn-text');
+        const polaroidWall = document.getElementById('polaroid-wall');
 
         let base64ImageString = "";
 
@@ -205,6 +311,25 @@
             uploadPlaceholder.classList.remove('hidden');
             resetPhotoBtn.classList.add('hidden');
         });
+
+        // 隨機生成微幅偏轉的 CSS 角度
+        function getRandomRotationClass() {
+            const rotValues = [-3, -2, -1, 1, 2, 3];
+            const randVal = rotValues[Math.floor(Math.random() * rotValues.length)];
+            return {
+                style: `transform: rotate(${randVal}deg); --rand-rot: ${randVal}deg;`,
+                tapeStyle: `transform: translate(-50%, 0) rotate(${randVal + (Math.random() * 4 - 2)}deg);`
+            };
+        }
+
+        // 獲取今天的台灣日期字串 (YYYY.MM.DD)
+        function getFormattedToday() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}.${month}.${day}`;
+        }
 
         // 提交處理
         function handleSubmit() {
@@ -243,11 +368,44 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    showModal("✨ 上傳成功！", "您的照片已經安全存入讀書會的 Google 雲端硬碟，感謝溫馨分享！", "success");
+                    showModal("✨ 上傳成功！", "您的照片已經安全存入讀書會的 Google 雲端硬碟，並已貼到下方拍立得牆上！", "success");
+                    
+                    // 動態建立並釘上新的拍立得
+                    const rot = getRandomRotationClass();
+                    const newPolaroid = document.createElement('div');
+                    newPolaroid.className = "polaroid-card relative p-4 pb-10 rounded-sm animate-pin";
+                    newPolaroid.setAttribute('style', rot.style);
+                    
+                    newPolaroid.innerHTML = `
+                        <!-- 半透明紙膠帶裝飾 -->
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-200/40 backdrop-blur-[1px] border-l border-r border-dashed border-amber-300/30 shadow-sm" style="${rot.tapeStyle}"></div>
+                        <!-- 影像框 -->
+                        <div class="aspect-square w-full overflow-hidden bg-stone-100 border border-stone-200/30">
+                            <img src="${base64ImageString}" class="w-full h-full object-cover">
+                        </div>
+                        <!-- 文字與簽名 -->
+                        <div class="mt-4 px-1 text-center">
+                            <p class="serif text-stone-700 italic text-sm leading-relaxed line-clamp-3">「${reflection}」</p>
+                            <div class="mt-3 flex items-center justify-between text-[11px] text-amber-800/60 font-medium">
+                                <span>— ${username}</span>
+                                <span>${getFormattedToday()}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    // 將新拍立得插到最前面
+                    polaroidWall.insertBefore(newPolaroid, polaroidWall.firstChild);
+
                     // 清空輸入框
                     document.getElementById('reflection').value = '';
                     document.getElementById('username').value = '';
                     resetPhotoBtn.click();
+
+                    // 延遲滾動至展示牆，好讓使用者看到他的照片在上面搖擺貼上的動畫
+                    setTimeout(() => {
+                        document.getElementById('wall-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 1000);
+
                 } else {
                     showModal("上傳出錯", "錯誤訊息：" + data.message, "error");
                 }
